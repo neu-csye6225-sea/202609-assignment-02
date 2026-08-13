@@ -3,9 +3,6 @@ title: "Assignment 2: CI/CD Deployment to AWS EC2"
 ---
 # Assignment 2: CI/CD Deployment to AWS EC2
 
-**Course:** CSYE 6225 - Network Structures and Cloud Computing, Fall 2026
-**Submission Platform:** Gradescope (GitHub-linked autograder, live health check)
-
 ## Objective
 
 The goal of this assignment is to provision and deploy an example API server in your AWS account using DevOps best practices. You will provision a raw AWS EC2 server and build a Continuous Deployment (CD) pipeline using GitHub Actions.
@@ -21,8 +18,6 @@ By the end of this assignment, you will have a workflow where pushing code to Gi
 
 **AI Tools:** You may use AI coding assistants to help draft configuration files or troubleshoot errors. Review any AI-generated code carefully before running it — you are responsible for understanding and defending every line you submit.
 
----
-
 ## Part 1: The Application
 
 Your repository contains a simple API server in the `api_server/` directory:
@@ -32,11 +27,10 @@ Your repository contains a simple API server in the `api_server/` directory:
 
 **Do not modify the application code.** You will deploy it as-is.
 
----
-
 ## Part 2: Infrastructure Setup (AWS)
 
 ### 2.1 Launch an EC2 Instance
+Manually launch an EC2 server and configure it for ssh access. 
 
 1. Log in to the AWS Console and navigate to EC2. Make sure you are in the **us-west-2 (Oregon)** region.
 2. Click **Launch Instances**.
@@ -65,7 +59,6 @@ Your repository contains a simple API server in the `api_server/` directory:
 2. Click your new instance. It may take up to 30 seconds to start and show a public IP address.
 3. Copy the **Public IPv4 address** (e.g., `54.123.45.67`).
 
----
 
 ## Part 3: Configure GitHub Repo Secrets
 
@@ -88,7 +81,7 @@ You will create a GitHub Action that triggers every time you push code. We'll co
 
 1. In your repository, goto the directory: `.github/workflows/`
 
-2. Create a file named `deploy.yml` inside that folder by copying the example file. 
+2. Create a file named `deploy.yml` inside that folder by copying the example file. You don't need to modify it. 
 
 3. Review it to understand what each step does before moving on.
 
@@ -153,34 +146,44 @@ Create a file named `server_info.txt` in the root of your repository containing 
 Do not include any other text, your private key, or any other credentials in this file.
 
 ### 5.2 Commit and Push
+Run these git commands to update your local repository and push a copy to github. 
 
 ```bash
+# see the status of your local repository files
+git status
+# adds the modified files to the pending commit list (staging)
 git add .github/workflows/deploy.yml server_info.txt
-git add server_info.txt
+# commit the changes in your local repository
 git commit -m "Add deployment pipeline and server info"
+# copy the changes to the github repository
 git push origin main
 ```
 
 ### 5.3 Watch the GitHub Action
+Once the changes are successfully pushed to Github, Github Actions will detect the deploy workflow that you added
+and will execute the workflow. 
 
 - Go to the **Actions** tab in your GitHub repository.
-- You should see the workflow running. Click on it to watch the logs.
+- You should see the workflow running. Click on it to watch the logs and activity. It may take 1-3 minutes. 
 - If it turns green, your server is deployed and running.
+- To verify the app is running, you can use the `curl` program or a browser to check.
+   - **Browser:** enter `http://<your-ip>/healthcheck` in a browser.
+   - **curl:** run `curl http://<your-ip>/healthcheck` on the command line. 
+- Expected Response:
+
+    ```json
+    {"status": "ok"}
+    ```
 
 ### 5.4 Submit in Gradescope
+If the app is running and verified, then you can run the autograder to submit the assignment and receive credit. 
 
 - Go to the Assignment 2 entry in Gradescope.
 - Click **Submit Assignment > GitHub**.
 - Select your repository and the `main` branch.
 - Click **Upload**.
 
-Gradescope will read your `server_info.txt`, then make a live request to `http://<your-ip>/healthcheck` and check for:
-
-```json
-{"status": "ok"}
-```
-
-returned with HTTP status code 200.
+Gradescope will run the autograder using your provided ip address and verify the working app. 
 
 **If you stop and restart your EC2 instance, its public IP will change.** Update both the `EC2_HOST` GitHub secret and `server_info.txt`, then resubmit.
 
@@ -194,8 +197,6 @@ Once your submission passes:
 
 Terminating stops the billing charges for this instance. You may resubmit as many times as needed before the deadline — just remember to keep your instance running until you're done.
 
----
-
 ## Grading Rubric
 
 - **(2 points)** EC2 instance launched correctly with appropriate security group rules (SSH + HTTP open).
@@ -203,8 +204,6 @@ Terminating stops the billing charges for this instance. You may resubmit as man
 - **(3 points)** `deploy.yml` workflow correctly copies code and starts the server on push, verified by a successful GitHub Actions run.
 - **(3 points)** `server_info.txt` present and correct; Gradescope's live health check against `/healthcheck` returns `{"status": "ok"}` with HTTP 200.
 - **(-3 points)** Sensitive information (e.g., a private key) committed to the repository.
-
----
 
 ## Troubleshooting & FAQ
 
