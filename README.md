@@ -1,3 +1,6 @@
+----
+title: "Assignment 2: CI/CD Deployment to AWS EC2"
+----
 # Assignment 2: CI/CD Deployment to AWS EC2
 
 **Course:** CSYE 6225 - Network Structures and Cloud Computing, Fall 2026
@@ -83,15 +86,11 @@ GitHub needs permission to log in to your server to update the code. Store your 
 
 You will create a GitHub Action that triggers every time you push code. We'll cover how GitHub Actions works in more depth in Module 3 — for now, copy the workflow below and focus on understanding what each step does.
 
-1. In your repository, create the directory: `.github/workflows/`
+1. In your repository, goto the directory: `.github/workflows/`
 
-   ```bash
-   mkdir -p .github/workflows
-   ```
+2. Create a file named `deploy.yml` inside that folder by copying the example file. 
 
-2. Create a file named `deploy.yml` inside that folder.
-
-3. Paste the following content into `deploy.yml`. Review it to understand what each step does before moving on.
+3. Review it to understand what each step does before moving on.
 
    ```yaml
    name: Deploy to EC2
@@ -157,6 +156,7 @@ Do not include any other text, your private key, or any other credentials in thi
 
 ```bash
 git add .github/workflows/deploy.yml server_info.txt
+git add server_info.txt
 git commit -m "Add deployment pipeline and server info"
 git push origin main
 ```
