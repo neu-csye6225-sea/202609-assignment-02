@@ -1,6 +1,6 @@
-----
+---
 title: "Assignment 2: CI/CD Deployment to AWS EC2"
-----
+---
 # Assignment 2: CI/CD Deployment to AWS EC2
 
 **Course:** CSYE 6225 - Network Structures and Cloud Computing, Fall 2026
